@@ -1,0 +1,94 @@
+{
+  "extraction_time": "2026-09-11 11:05:00",
+  "extraction_tool": "Open-source logical extraction (adb backup + dumpsys)",
+  "seized_from": "Handset recovered during search at Giridih, Jharkhand (Case exhibit M-4)",
+  "device": {
+    "manufacturer": "Samsung",
+    "model": "SM-A045F Galaxy A04",
+    "android_version": "12",
+    "serial": "R9ZT40A11XB",
+    "android_id": "9d41c2ab7e0154cc",
+    "imei": ["359871042256641", "359871048123452"],
+    "wifi_mac": "02:1a:2b:3c:4d:5e",
+    "bluetooth_mac": "02:1a:2b:3c:4d:5f"
+  },
+  "sim": [
+    { "slot": 1, "msisdn": "9812345670", "imsi": "404453456789012", "iccid": "8991459988776655443", "operator": "BHARAT CELLULAR", "first_seen": "2026-09-06 08:12:00" },
+    { "slot": 2, "msisdn": "9123456789", "imsi": "404452345678901", "iccid": "8991459911223344556", "operator": "BHARAT CELLULAR", "first_seen": "2026-09-07 19:44:00" },
+    { "slot": 1, "msisdn": "9701234567", "imsi": "404454567890123", "iccid": "8991459933445566778", "operator": "BHARAT CELLULAR", "first_seen": "2026-09-05 14:20:00", "removed": "2026-09-07 19:40:00" },
+    { "slot": 2, "msisdn": "9988776655", "imsi": "404455678901234", "iccid": "8991459955667788990", "operator": "BHARAT CELLULAR", "first_seen": "2026-09-08 07:55:00" }
+  ],
+  "installed_packages": [
+    {
+      "package": "com.rewards.sbi",
+      "label": "SBI Rewards (builder)",
+      "version": "1.0.4",
+      "installer": "unknown",
+      "install_time": "2026-09-05 22:14:03",
+      "sha256": "7f3c9a12e84b5d60c1af27b3e9d04a5586fe1c2b8d4790a3f6512ce8b0d7a941",
+      "path": "/storage/emulated/0/Download/SBI-Rewards.apk",
+      "flags": ["DEBUGGABLE"],
+      "permissions": [
+        "android.permission.READ_SMS",
+        "android.permission.RECEIVE_SMS",
+        "android.permission.SEND_SMS",
+        "android.permission.BIND_ACCESSIBILITY_SERVICE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_CALL_LOG",
+        "android.permission.READ_PHONE_STATE",
+        "android.permission.REQUEST_INSTALL_PACKAGES"
+      ],
+      "contacted_hosts": ["cdn-track-sync.top"]
+    },
+    {
+      "package": "org.telegram.messenger",
+      "label": "Telegram",
+      "version": "10.14.5",
+      "installer": "com.android.vending",
+      "install_time": "2026-08-02 20:01:12",
+      "permissions": ["android.permission.READ_CONTACTS", "android.permission.READ_SMS"]
+    },
+    {
+      "package": "com.smsforwarder.pro",
+      "label": "SMS Forwarder Pro",
+      "version": "3.1.0",
+      "installer": "unknown",
+      "install_time": "2026-09-05 22:31:40",
+      "sha256": "b1d4488a7c2e05f39ab6714cc0d8523ef91a7460b2c5d8e13f0a94726ce5d118",
+      "permissions": [
+        "android.permission.READ_SMS",
+        "android.permission.RECEIVE_SMS",
+        "android.permission.SEND_SMS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "contacted_hosts": ["cdn-track-sync.top"]
+    },
+    {
+      "package": "com.phonepe.app",
+      "label": "PhonePe",
+      "version": "24.09.11",
+      "installer": "com.android.vending",
+      "install_time": "2026-08-14 10:05:31",
+      "permissions": ["android.permission.READ_SMS", "android.permission.READ_PHONE_STATE"]
+    }
+  ],
+  "sms": [
+    {
+      "address": "9876543210",
+      "type": "sent",
+      "date": "2026-09-08 10:19:44",
+      "body": "SBI REWARDS: Your 9840 points expire today. Install http://sbi-rewardz.xyz/download/SBI-Rewards.apk and complete re-KYC. Enable accessibility permission to auto-redeem."
+    },
+    {
+      "address": "9822014477",
+      "type": "sent",
+      "date": "2026-09-08 09:40:02",
+      "body": "Madam your KYC is pending, account will be blocked today. Install the app from http://sbi-rewardz.xyz/download/SBI-Rewards.apk and share the reference number urgently."
+    }
+  ],
+  "browser_history": [
+    { "url": "http://cdn-track-sync.top/panel/login", "title": "Panel", "time": "2026-09-08 08:44:19" },
+    { "url": "http://sbi-rewardz.xyz/builder", "title": "APK Builder", "time": "2026-09-05 22:02:41" }
+  ]
+}

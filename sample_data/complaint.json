@@ -1,0 +1,25 @@
+{
+  "acknowledgement_no": "NCRP/2026/09/0884213",
+  "complaint_id": "CYB-PS-KHR-2026-0417",
+  "category": "Online Financial Fraud > UPI / Internet Banking Fraud (APK-based)",
+  "reported_at": "2026-09-08 13:10:00",
+  "incident_time": "2026-09-08 09:10:00",
+  "police_station": "Cyber Crime PS, Khargone",
+  "district": "Khargone, Madhya Pradesh",
+  "investigating_officer": "SI A. Deshmukh",
+  "amount": 485000.00,
+  "victim": {
+    "name": "Ramesh Kumar",
+    "phone": "9876543210",
+    "email": "ramesh.kumar1985@gmail.com",
+    "account": "50100234567890",
+    "bank": "HDFC Bank, Khargone Branch",
+    "ifsc": "HDFC0001842",
+    "upi": "ramesh1985@okhdfcbank"
+  },
+  "narrative": "Complainant received an email purporting to be from SBI Rewards offering redemption of expiring credit card reward points. He clicked the link in the email and installed an application named 'SBI Rewards'. Shortly afterwards he received a call from a person identifying himself as a bank official who instructed him to keep the application open and share the reference number displayed. Within the next ten minutes three debits totalling Rs. 4,85,000/- were effected from his account through IMPS without his consent. No OTP was seen by him as the messages were intercepted by the installed application.",
+  "suspects": [
+    { "phone": "9123456789", "note": "Caller who impersonated bank official" },
+    { "upi": "sanjay.y@okaxis", "note": "Beneficiary handle seen in debit SMS" }
+  ]
+}

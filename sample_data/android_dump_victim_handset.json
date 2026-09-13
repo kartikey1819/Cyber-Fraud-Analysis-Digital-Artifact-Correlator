@@ -1,0 +1,112 @@
+{
+  "extraction_time": "2026-09-08 15:40:00",
+  "extraction_tool": "Open-source logical extraction (adb backup + dumpsys)",
+  "seized_from": "Ramesh Kumar (complainant) - voluntary production",
+  "device": {
+    "manufacturer": "Xiaomi",
+    "model": "Redmi Note 12",
+    "android_version": "13",
+    "serial": "8f2ac91b",
+    "android_id": "a19c4f77e8b20d51",
+    "imei": ["351756051523987", "351756058891203"],
+    "wifi_mac": "3c:cd:5d:a1:74:9e",
+    "bluetooth_mac": "3c:cd:5d:a1:74:9f"
+  },
+  "sim": [
+    {
+      "slot": 1,
+      "msisdn": "9876543210",
+      "imsi": "404451122334455",
+      "iccid": "8991450112233445566",
+      "operator": "BHARAT CELLULAR",
+      "first_seen": "2024-03-11 10:02:00"
+    }
+  ],
+  "installed_packages": [
+    {
+      "package": "com.sbi.rewards",
+      "label": "SBI Rewards",
+      "version": "1.0.4",
+      "installer": "com.android.chrome",
+      "install_time": "2026-09-08 09:42:18",
+      "sha256": "7f3c9a12e84b5d60c1af27b3e9d04a5586fe1c2b8d4790a3f6512ce8b0d7a941",
+      "path": "/data/app/com.sbi.rewards-1/base.apk",
+      "permissions": [
+        "android.permission.READ_SMS",
+        "android.permission.RECEIVE_SMS",
+        "android.permission.SEND_SMS",
+        "android.permission.BIND_ACCESSIBILITY_SERVICE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_PHONE_STATE",
+        "android.permission.READ_CONTACTS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.REQUEST_INSTALL_PACKAGES",
+        "android.permission.QUERY_ALL_PACKAGES",
+        "android.permission.INTERNET"
+      ],
+      "contacted_hosts": ["cdn-track-sync.top", "sbi-rewardz.xyz"]
+    },
+    {
+      "package": "com.whatsapp",
+      "label": "WhatsApp",
+      "version": "2.24.18.79",
+      "installer": "com.android.vending",
+      "install_time": "2024-03-11 12:40:02",
+      "permissions": ["android.permission.READ_CONTACTS", "android.permission.CAMERA"]
+    },
+    {
+      "package": "com.google.android.apps.nbu.paisa.user",
+      "label": "Google Pay",
+      "version": "228.1.4",
+      "installer": "com.android.vending",
+      "install_time": "2024-04-02 09:11:44",
+      "permissions": ["android.permission.READ_PHONE_STATE", "android.permission.READ_SMS"]
+    },
+    {
+      "package": "com.hdfcbank.payzapp",
+      "label": "HDFC PayZapp",
+      "version": "5.2.1",
+      "installer": "com.android.vending",
+      "install_time": "2024-06-19 18:22:10",
+      "permissions": ["android.permission.READ_SMS", "android.permission.READ_PHONE_STATE"]
+    }
+  ],
+  "sms": [
+    {
+      "address": "9123456789",
+      "type": "inbox",
+      "date": "2026-09-08 10:19:44",
+      "body": "SBI REWARDS: Your 9840 points expire today. Install http://sbi-rewardz.xyz/download/SBI-Rewards.apk and complete re-KYC. Enable accessibility permission to auto-redeem. Helpline 9123456789"
+    },
+    {
+      "address": "VM-HDFCBK",
+      "type": "inbox",
+      "date": "2026-09-08 10:32:19",
+      "body": "Rs.195000.00 debited from a/c XXXXXX7890 on 08-09-26 to SANJAY YADAV via IMPS Ref 226951112040. Not you? Call 18002586161"
+    },
+    {
+      "address": "VM-HDFCBK",
+      "type": "inbox",
+      "date": "2026-09-08 10:36:55",
+      "body": "Rs.195000.00 debited from a/c XXXXXX7890 on 08-09-26 to SANJAY YADAV via IMPS Ref 226951112188. Not you? Call 18002586161"
+    },
+    {
+      "address": "VM-HDFCBK",
+      "type": "inbox",
+      "date": "2026-09-08 10:41:12",
+      "body": "Rs.95000.00 debited from a/c XXXXXX7890 on 08-09-26 to SANJAY YADAV via IMPS Ref 226951112377. Not you? Call 18002586161"
+    }
+  ],
+  "browser_history": [
+    {
+      "url": "http://sbi-rewardz.xyz/redeem?id=9840",
+      "title": "SBI Rewards - Redeem Points",
+      "time": "2026-09-08 09:11:52"
+    },
+    {
+      "url": "http://sbi-rewardz.xyz/download/SBI-Rewards.apk",
+      "title": "Download",
+      "time": "2026-09-08 09:41:10"
+    }
+  ]
+}

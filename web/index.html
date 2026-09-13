@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cyber Fraud Correlator</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="mark">CFC</div>
+    <div>
+      <h1>Unified Cyber Fraud Analysis &amp; Digital Artifact Correlator</h1>
+      <p id="caseline">No case loaded &mdash; ingest evidence to begin</p>
+    </div>
+  </div>
+  <div class="actions">
+    <input id="officer" type="text" placeholder="Investigating officer" autocomplete="off">
+    <button id="btn-sample" class="btn">Load demo case</button>
+    <label class="btn primary" for="file-input">Ingest evidence</label>
+    <input id="file-input" type="file" multiple hidden
+           accept=".csv,.tsv,.txt,.xlsx,.xlsm,.eml,.json">
+    <button id="btn-json" class="btn ghost" disabled>Brief&nbsp;JSON</button>
+    <button id="btn-pdf" class="btn ghost" disabled>Brief&nbsp;PDF</button>
+  </div>
+</header>
+
+<main id="layout">
+
+  <aside class="col left">
+    <section class="kpis" id="kpis"></section>
+
+    <section class="panel">
+      <h2>Exhibits &amp; integrity</h2>
+      <div id="exhibits" class="scroll"><p class="empty">No exhibits ingested.</p></div>
+    </section>
+
+    <section class="panel">
+      <h2>Graph filters</h2>
+      <div class="filter-row">
+        <label for="minrisk">Minimum risk <b id="minrisk-val">0</b></label>
+        <input id="minrisk" type="range" min="0" max="100" value="0" step="5">
+      </div>
+      <label class="check"><input type="checkbox" id="money-only"> Money-flow edges only</label>
+      <label class="check"><input type="checkbox" id="hide-orphans" checked> Hide unconnected nodes</label>
+      <div id="type-filters" class="chips"></div>
+    </section>
+  </aside>
+
+  <section class="col center">
+    <div class="graph-toolbar">
+      <input id="search" type="search" placeholder="Search phone / account / UPI / IMEI / IP&hellip;">
+      <div class="spacer"></div>
+      <button class="chip-btn" id="btn-relayout" title="Re-run layout">Re-layout</button>
+      <button class="chip-btn" id="btn-fit" title="Fit to view">Fit</button>
+      <button class="chip-btn" id="btn-flow" title="Arrange by fund-flow layer">Flow view</button>
+    </div>
+    <div id="canvas-wrap">
+      <canvas id="graph"></canvas>
+      <div id="tooltip" class="tooltip" hidden></div>
+      <div id="legend" class="legend"></div>
+      <div id="graph-empty" class="graph-empty">
+        <h3>No entity graph yet</h3>
+        <p>Load the demo case, or drop CDR / IPDR / bank / UPI / .eml / Android-dump
+           files anywhere on this window.</p>
+      </div>
+    </div>
+  </section>
+
+  <aside class="col right">
+    <nav class="tabs">
+      <button class="tab active" data-tab="suspects">Suspects</button>
+      <button class="tab" data-tab="findings">Links</button>
+      <button class="tab" data-tab="trail">Trail</button>
+      <button class="tab" data-tab="timeline">Timeline</button>
+      <button class="tab" data-tab="actions">Actions</button>
+    </nav>
+    <div class="tab-body scroll" id="tab-suspects"></div>
+    <div class="tab-body scroll" id="tab-findings" hidden></div>
+    <div class="tab-body scroll" id="tab-trail" hidden></div>
+    <div class="tab-body scroll" id="tab-timeline" hidden></div>
+    <div class="tab-body scroll" id="tab-actions" hidden></div>
+  </aside>
+</main>
+
+<div id="detail" class="detail" hidden>
+  <div class="detail-head">
+    <div>
+      <h3 id="detail-title">&nbsp;</h3>
+      <p id="detail-sub">&nbsp;</p>
+    </div>
+    <button id="detail-close" class="icon-btn" aria-label="Close">&times;</button>
+  </div>
+  <div id="detail-body" class="scroll"></div>
+</div>
+
+<div id="drop" class="drop" hidden><div>Release to ingest evidence</div></div>
+<div id="busy" class="busy" hidden><div class="spinner"></div><p id="busy-text">Working&hellip;</p></div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="/static/graph.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
