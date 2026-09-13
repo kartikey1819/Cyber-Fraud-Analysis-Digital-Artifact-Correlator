@@ -11,6 +11,8 @@ import mimetypes
 import os
 import posixpath
 import re
+import shutil
+import stat
 import threading
 import traceback
 import urllib.parse
@@ -40,6 +42,12 @@ _lock = threading.Lock()
 # that arrive mid-build wait on this event rather than starting a second one.
 _prewarm_started = threading.Event()
 _prewarm_done = threading.Event()
+_demo_case_id = None
+
+# Cases are held in memory and their exhibits on disk. On a small shared
+# instance an unbounded registry is a slow leak, so keep only the most recent
+# few and discard the rest. The demonstration case is never evicted.
+MAX_CASES = int(os.environ.get("CFC_MAX_CASES", "8"))
 
 
 # --------------------------------------------------------------------------
@@ -117,7 +125,9 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/cases":
                 _await_prewarm()
                 with _lock:
-                    return self._json({"cases": [
+                    return self._json({
+                        "prewarming": _prewarm_started.is_set() and not _prewarm_done.is_set(),
+                        "cases": [
                         {"case_id": c.case_id, "officer": c.officer,
                          "exhibits": len(c.exhibits), "events": len(c.events),
                          "suspects": len(c.suspects)}
@@ -183,8 +193,18 @@ class Handler(BaseHTTPRequestHandler):
         return case
 
     def _register(self, case):
+        evicted = []
         with _lock:
             _cases[case.case_id] = case
+            while len(_cases) > MAX_CASES:
+                for cid in list(_cases):
+                    if cid != _demo_case_id:
+                        evicted.append(_cases.pop(cid))
+                        break
+                else:
+                    break
+        for old in evicted:
+            _discard(old)
         return case
 
     def _new_sample(self):
@@ -291,8 +311,29 @@ class Handler(BaseHTTPRequestHandler):
                            f'inline; filename="{case.case_id}_brief.pdf"'})
 
 
-def _await_prewarm(timeout=25.0):
-    """Block briefly if the demo case is still being built at start-up."""
+def _discard(case):
+    """Drop an evicted case's working copy of the exhibits."""
+    def _force(func, path, _exc):
+        try:
+            os.chmod(path, stat.S_IWRITE)
+            func(path)
+        except OSError:
+            pass
+    try:
+        shutil.rmtree(case.root, onerror=_force)
+    except Exception:
+        pass
+
+
+def _await_prewarm(timeout=None):
+    """Block while the demo case is still being built at start-up.
+
+    A free-tier instance runs on a fraction of a CPU, so the build can take far
+    longer there than on a workstation. Waiting is much better than letting the
+    browser start a second, duplicate ingest.
+    """
+    if timeout is None:
+        timeout = float(os.environ.get("CFC_PREWARM_WAIT", "90"))
     if _prewarm_started.is_set() and not _prewarm_done.is_set():
         _prewarm_done.wait(timeout)
 
@@ -308,8 +349,10 @@ def prewarm_sample():
             case = Case(officer="UNSPECIFIED")
             case.add_directory(SAMPLE_DIR)
             case.analyze()
+            global _demo_case_id
             with _lock:
                 _cases[case.case_id] = case
+                _demo_case_id = case.case_id
             print(f"  Demo case  : {case.case_id} ready "
                   f"({len(case.exhibits)} exhibits, {len(case.events)} events, "
                   f"{case.processing_ms} ms)", flush=True)

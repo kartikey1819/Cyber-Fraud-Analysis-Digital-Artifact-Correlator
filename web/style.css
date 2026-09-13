@@ -171,7 +171,8 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
 .chip-btn:hover, .chip-btn.on { color: var(--text); border-color: #33465f; background: #1f2a3a; }
 
 #canvas-wrap { position: relative; flex: 1; min-height: 0; }
-#graph { display: block; width: 100%; height: 100%; cursor: grab; }
+#graph { display: block; width: 100%; height: 100%; cursor: grab;
+         touch-action: none; }  /* we handle pan/pinch ourselves */
 #graph.grabbing { cursor: grabbing; }
 
 .tooltip {
@@ -327,4 +328,44 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
 @media (max-width: 1320px) {
   #layout { grid-template-columns: 250px minmax(0, 1fr) 310px; }
   .detail { right: 322px; width: 340px; }
+}
+
+/* Narrow screens: a reviewer will open this link on a phone. Stack the three
+   columns, let the page scroll, and give the graph a fixed slice of the
+   viewport so it stays usable instead of collapsing to nothing. */
+@media (max-width: 900px) {
+  html, body { overflow: auto; height: auto; }
+  .topbar {
+    height: auto; flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 50;
+  }
+  .topbar h1 { font-size: 13px; }
+  .actions { width: 100%; flex-wrap: wrap; }
+  #officer { flex: 1 1 150px; width: auto; }
+
+  /* flex (not block) so the graph can be ordered to the top: a reviewer on a
+     phone should land on the network, not scroll past the exhibit list */
+  #layout, body.has-banner #layout {
+    display: flex; flex-direction: column; height: auto;
+  }
+  .col { display: block; }
+  .center { order: 0; }
+  .right  { order: 1; }
+  .left   { order: 2; }
+  .left, .right {
+    border: none; border-top: 1px solid var(--line);
+    max-height: none; overflow: visible;
+  }
+  #exhibits { max-height: none; }
+
+  #canvas-wrap { height: 62vh; min-height: 340px; }
+  .graph-toolbar { flex-wrap: wrap; }
+  #search { width: 100%; }
+  .legend { max-width: calc(100% - 24px); font-size: 9px; }
+
+  .tab-body { max-height: none; overflow: visible; }
+  .detail {
+    position: fixed; inset: auto 8px 8px 8px; width: auto;
+    max-height: 66vh; z-index: 80;
+  }
+  .kpis { grid-template-columns: 1fr 1fr; }
 }

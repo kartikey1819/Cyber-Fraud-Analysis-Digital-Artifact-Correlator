@@ -70,8 +70,27 @@ class GraphView {
     this.hover = null;
     this.handlers = {};
     this.running = false;
+    this._pointers = new Map();
+    this._pinch = null;
     this._bind();
+    this._observeSize();
     this.resize();
+  }
+
+  /** Refit when the canvas box changes (orientation flip, responsive
+      reflow, window resize) so the graph is never drawn off-screen. */
+  _observeSize() {
+    if (typeof ResizeObserver === 'undefined') return;
+    let last = null, timer = null;
+    const ro = new ResizeObserver(entries => {
+      const box = entries[0].contentRect;
+      const key = Math.round(box.width) + 'x' + Math.round(box.height);
+      if (key === last || box.width < 2 || box.height < 2) return;
+      last = key;
+      clearTimeout(timer);
+      timer = setTimeout(() => { this.resize(); this.fit(); }, 120);
+    });
+    ro.observe(this.canvas.parentElement || this.canvas);
   }
 
   on(evt, fn) { (this.handlers[evt] = this.handlers[evt] || []).push(fn); }
@@ -389,8 +408,27 @@ class GraphView {
     const c = this.canvas;
     let dragNode = null, panning = false, last = null, moved = false;
 
+    const pinchDist = () => {
+      const [a, b] = [...this._pointers.values()];
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    };
+    const pinchMid = () => {
+      const [a, b] = [...this._pointers.values()];
+      return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+    };
+
     c.addEventListener('pointerdown', ev => {
       c.setPointerCapture(ev.pointerId);
+      this._pointers.set(ev.pointerId, { x: ev.offsetX, y: ev.offsetY });
+      if (this._pointers.size === 2) {
+        // second finger down: abandon drag/pan and start a pinch
+        if (dragNode) { dragNode.fixed = false; dragNode = null; }
+        panning = false;
+        c.classList.remove('grabbing');
+        this._pinch = { dist: pinchDist(), scale: this.scale, mid: pinchMid() };
+        moved = true;
+        return;
+      }
       last = { x: ev.offsetX, y: ev.offsetY };
       moved = false;
       const hit = this.nodeAt(ev.offsetX, ev.offsetY);
@@ -399,6 +437,23 @@ class GraphView {
     });
 
     c.addEventListener('pointermove', ev => {
+      if (this._pointers.has(ev.pointerId)) {
+        this._pointers.set(ev.pointerId, { x: ev.offsetX, y: ev.offsetY });
+      }
+      if (this._pinch && this._pointers.size >= 2) {
+        const d = pinchDist();
+        if (d > 4) {
+          const next = Math.min(6, Math.max(0.08, this._pinch.scale * (d / this._pinch.dist)));
+          const m = this._pinch.mid;
+          const wx = (m.x - this.tx) / this.scale;
+          const wy = (m.y - this.ty) / this.scale;
+          this.scale = next;
+          this.tx = m.x - wx * next;
+          this.ty = m.y - wy * next;
+          this.draw();
+        }
+        return;
+      }
       if (dragNode) {
         const w = this.toWorld(ev.offsetX, ev.offsetY);
         dragNode.x = w.x; dragNode.y = w.y;
@@ -425,6 +480,9 @@ class GraphView {
     });
 
     const release = ev => {
+      this._pointers.delete(ev.pointerId);
+      if (this._pointers.size < 2) this._pinch = null;
+      if (this._pointers.size > 0) { dragNode = null; panning = false; return; }
       if (dragNode) { dragNode.fixed = false; }
       if (!moved) {
         const hit = this.nodeAt(ev.offsetX, ev.offsetY);
@@ -436,7 +494,11 @@ class GraphView {
       c.classList.remove('grabbing');
     };
     c.addEventListener('pointerup', release);
-    c.addEventListener('pointercancel', () => { dragNode = null; panning = false; });
+    c.addEventListener('pointercancel', ev => {
+      this._pointers.delete(ev.pointerId);
+      this._pinch = null;
+      dragNode = null; panning = false;
+    });
     c.addEventListener('pointerleave', () => {
       if (this.hover) { this.hover = null; this.draw(); }
       this.emit('hover', null);
@@ -455,5 +517,8 @@ class GraphView {
     }, { passive: false });
 
     window.addEventListener('resize', () => this.resize());
+    window.addEventListener('orientationchange', () => setTimeout(() => {
+      this.resize(); this.fit();
+    }, 250));
   }
 }
