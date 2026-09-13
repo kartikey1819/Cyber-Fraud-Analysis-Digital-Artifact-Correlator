@@ -1,0 +1,9 @@
+# Intentionally empty.
+#
+# This project has NO third-party dependencies - the XLSX reader, PDF writer,
+# HTTP server and graph layout engine are all implemented against the Python
+# standard library, so it runs on a locked-down or air-gapped police
+# workstation with nothing to install.
+#
+# The file exists only because managed Python hosts (Render, Railway, Heroku)
+# expect a dependency manifest to detect the runtime.

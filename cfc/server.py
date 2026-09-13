@@ -24,7 +24,13 @@ ROOT = os.path.dirname(HERE)
 WEB_DIR = os.path.join(ROOT, "web")
 SAMPLE_DIR = os.path.join(ROOT, "sample_data")
 
-MAX_UPLOAD = 96 * 1024 * 1024
+# Upload ceiling. Lower on a shared public host, where a large upload is more
+# likely to exhaust the instance than to be genuine evidence.
+MAX_UPLOAD = int(os.environ.get("CFC_MAX_UPLOAD_MB", "96")) * 1024 * 1024
+
+# Public-demo mode: the dashboard shows a standing warning that the instance is
+# internet-facing and must not receive real case material. Set by render.yaml.
+PUBLIC_DEMO = os.environ.get("CFC_PUBLIC_DEMO", "").strip().lower() in ("1", "true", "yes")
 
 _cases = {}
 _lock = threading.Lock()
@@ -102,6 +108,12 @@ class Handler(BaseHTTPRequestHandler):
                 return self._static("index.html")
             if path.startswith("/static/"):
                 return self._static(path[len("/static/"):])
+            if path == "/api/config":
+                return self._json({
+                    "public_demo": PUBLIC_DEMO,
+                    "max_upload_mb": MAX_UPLOAD // (1024 * 1024),
+                    "version": "1.0.0",
+                })
             if path == "/api/cases":
                 _await_prewarm()
                 with _lock:
@@ -327,12 +339,21 @@ def serve(host="127.0.0.1", port=8713, open_browser=True, demo=True):
     httpd = ThreadingHTTPServer((host, port), Handler)
     if demo:
         prewarm_sample()
-    url = f"http://{host}:{port}/"
+    shown = "127.0.0.1" if host in ("0.0.0.0", "::") else host
+    url = f"http://{shown}:{port}/"
     print("=" * 70)
     print("  Unified Cyber Fraud Analysis & Digital Artifact Correlator")
     print("=" * 70)
     print(f"  Dashboard : {url}")
-    print("  Evidence  : loopback only - nothing is uploaded off this machine")
+    if host in ("0.0.0.0", "::"):
+        print(f"  Binding   : {host}:{port} - reachable from the network")
+        print("  Evidence  : NOT loopback-only in this mode. Do not send real")
+        print("              case material to a shared or internet-facing host.")
+    else:
+        print("  Evidence  : loopback only - nothing is uploaded off this machine")
+    if PUBLIC_DEMO:
+        print("  Mode      : PUBLIC DEMO (banner shown, uploads capped at "
+              f"{MAX_UPLOAD // (1024 * 1024)} MB)")
     print("  Demo case : pre-loading (use --no-demo to start empty)" if demo
           else "  Demo case : disabled")
     print("  Stop      : Ctrl+C")

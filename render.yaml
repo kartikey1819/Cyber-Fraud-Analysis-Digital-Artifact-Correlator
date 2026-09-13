@@ -1,0 +1,24 @@
+# Render blueprint - https://render.com/docs/blueprint-spec
+#
+# One-click deploy of the demonstration instance. Note the posture change: the
+# tool is designed to run on loopback on the officer's own workstation. A Render
+# deployment is internet-facing with ephemeral storage, so it is configured here
+# strictly as a public demo (CFC_PUBLIC_DEMO shows a standing warning banner).
+services:
+  - type: web
+    name: cyber-fraud-correlator
+    runtime: python
+    plan: free
+    region: singapore          # closest Render region to India; change if needed
+    branch: main
+    buildCommand: "pip install -r requirements.txt && python tools/make_sample_xlsx.py"
+    startCommand: "python run.py"
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.6"
+      - key: CFC_PUBLIC_DEMO
+        value: "1"
+      - key: CFC_MAX_UPLOAD_MB
+        value: "16"

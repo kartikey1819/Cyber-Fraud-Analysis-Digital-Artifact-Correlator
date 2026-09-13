@@ -109,6 +109,35 @@ are never merged. Those are the false positives that would put a victim on a sei
 
 ---
 
+## Deploying a public demo (Render)
+
+The repository carries a `render.yaml` blueprint, so the whole service is defined in code:
+
+1. Render dashboard → **New → Blueprint** → connect this repository → **Apply**.
+2. Render reads `render.yaml`, builds, and publishes at
+   `https://cyber-fraud-correlator.onrender.com` (the exact host is shown in the dashboard).
+
+The blueprint sets `CFC_PUBLIC_DEMO=1`, which puts a standing warning banner on the dashboard,
+and caps uploads at 16 MB. On the free plan the instance sleeps after ~15 minutes idle, so the
+first request after a sleep takes roughly a minute to wake; the demo case is rebuilt in a
+background thread as soon as it does, so the link still lands on a populated graph.
+
+**Understand what the deployment changes.** This tool is designed to run on loopback on the
+officer's own workstation, which is why it has no dependencies and never sends data anywhere.
+A hosted instance is the opposite posture:
+
+- anything ingested is reachable by **anyone with the link** — there is no authentication;
+- storage is **ephemeral**, so cases vanish on restart or redeploy;
+- exhibits are written to a shared host you do not control.
+
+It is appropriate for a screening demo with the synthetic sample data, and **not** for real
+case material. For casework, clone and run `python run.py` locally.
+
+Any host that injects `PORT` works the same way (Railway, Fly.io, Heroku) — `run.py` binds
+`0.0.0.0` and skips the browser launch when `PORT` is present.
+
+---
+
 ## Design decisions worth knowing
 
 - **De-duplication across institutions.** The same transfer appears as a debit in the

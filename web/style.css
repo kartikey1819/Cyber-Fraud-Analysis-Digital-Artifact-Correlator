@@ -72,6 +72,19 @@ html, body {
 .btn.ghost { background: transparent; }
 .btn:disabled { opacity: .38; cursor: not-allowed; }
 
+/* ----------------------------------------------------------- demo banner */
+.demo-banner {
+  padding: 7px 16px; font-size: 11.5px; line-height: 1.5;
+  background: rgba(234,179,8,.12); color: #fde68a;
+  border-bottom: 1px solid rgba(234,179,8,.35);
+}
+.demo-banner b { color: #fef3c7; }
+.demo-banner code {
+  font-family: var(--mono); font-size: 11px; padding: 1px 5px; border-radius: 4px;
+  background: rgba(0,0,0,.3);
+}
+body.has-banner #layout { height: calc(100% - 60px - var(--banner-h, 34px)); }
+
 /* ---------------------------------------------------------------- layout */
 #layout {
   display: grid; grid-template-columns: 286px minmax(0, 1fr) 348px;

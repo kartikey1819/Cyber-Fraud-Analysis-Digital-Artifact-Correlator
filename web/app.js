@@ -66,7 +66,25 @@ async function loadSample(auto) {
 /* Open with something on screen: restore the case this server session is
    already working on, otherwise fall back to the demonstration case so the
    dashboard is never a blank canvas. Ingesting real evidence replaces it. */
+async function showConfig() {
+  try {
+    const res = await fetch('/api/config');
+    if (!res.ok) return;
+    const cfg = await res.json();
+    if (!cfg.public_demo) return;
+    const banner = $('#demo-banner');
+    banner.hidden = false;
+    document.body.classList.add('has-banner');
+    document.documentElement.style.setProperty(
+      '--banner-h', banner.offsetHeight + 'px');
+    if (state.graph) state.graph.resize();
+  } catch (e) {
+    /* config endpoint is optional */
+  }
+}
+
 async function boot() {
+  await showConfig();
   try {
     const res = await fetch('/api/cases');
     if (res.ok) {
@@ -74,6 +92,7 @@ async function boot() {
       const cases = js.cases || [];
       if (cases.length) {
         await openCase(cases[cases.length - 1].case_id);
+        if (state.graph) { state.graph.resize(); state.graph.fit(); }
         return;
       }
     }
