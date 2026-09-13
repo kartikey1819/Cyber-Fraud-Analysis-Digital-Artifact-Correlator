@@ -33,6 +33,8 @@ class Case:
         self.context = {}
         self.processing_ms = 0
         self.errors = []
+        self._report = None
+        self._analysis = None
         os.makedirs(self.evidence_dir, exist_ok=True)
         self.custody.record("CASE_OPEN", f"Case {self.case_id} opened by {officer}")
 
@@ -65,6 +67,8 @@ class Case:
     # -- pipeline ----------------------------------------------------------
     def analyze(self):
         t0 = time.time()
+        self._report = None
+        self._analysis = None
         self.events = []
         for ex in self.exhibits:
             if not ex.verify():
@@ -147,8 +151,36 @@ class Case:
         return {"nodes": nodes, "edges": edges,
                 "truncated": len(g.nodes) - len(nodes)}
 
-    def report(self):
-        return report_mod.build_report(self)
+    def report(self, rebuild=False):
+        """The investigative brief for this case.
+
+        A case is immutable once analysed, so the brief is built once and
+        reused. That also gives the brief a stable `report_sha256` -- rebuilding
+        it per request produced a new generation timestamp, and therefore a
+        different digest, every time the same document was downloaded.
+        """
+        if self._report is None or rebuild:
+            self._report = report_mod.build_report(self)
+        return self._report
+
+    def analysis_payload(self, rebuild=False):
+        """Everything the dashboard needs, assembled once and cached.
+
+        On a small shared instance this is the difference between a one-second
+        load and half a minute: the graph payload, the per-entity scoring
+        rationale and the event stream are all re-serialised otherwise.
+        """
+        if self._analysis is None or rebuild:
+            payload = dict(self.report(rebuild=rebuild))
+            payload["events"] = [{
+                "id": e.id, "kind": e.kind, "ts": iso(e.ts), "summary": e.summary,
+                "exhibit": e.exhibit, "source": e.source, "row": e.row,
+                "amount": e.amount, "direction": e.direction, "flags": e.flags,
+                "cite": e.cite(), "attrs": _compact_attrs(e.attrs),
+            } for e in self.events]
+            payload["scores"] = self.scores
+            self._analysis = json.dumps(payload, default=str)
+        return self._analysis
 
     def export(self, out_dir=None):
         out_dir = out_dir or os.path.join(self.root, "output")
@@ -178,6 +210,20 @@ class Case:
             "processing_ms": self.processing_ms,
             "errors": self.errors,
         }
+
+
+def _compact_attrs(attrs):
+    """Trim bulky fields out of the per-event payload sent to the browser."""
+    out = {}
+    for k, v in (attrs or {}).items():
+        if k == "flow":
+            continue
+        if isinstance(v, str) and len(v) > 600:
+            v = v[:600] + "…"
+        if isinstance(v, list) and len(v) > 40:
+            v = v[:40] + ["…"]
+        out[k] = v
+    return out
 
 
 def run(paths, officer="UNSPECIFIED", workdir="cases", case_id=None):

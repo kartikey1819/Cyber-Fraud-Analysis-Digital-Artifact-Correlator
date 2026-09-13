@@ -274,15 +274,8 @@ class Handler(BaseHTTPRequestHandler):
         case = self._case(case_id)
         if case is None:
             return
-        report = case.report()
-        report["events"] = [{
-            "id": e.id, "kind": e.kind, "ts": iso(e.ts), "summary": e.summary,
-            "exhibit": e.exhibit, "source": e.source, "row": e.row,
-            "amount": e.amount, "direction": e.direction, "flags": e.flags,
-            "cite": e.cite(), "attrs": _compact(e.attrs),
-        } for e in case.events]
-        report["scores"] = case.scores
-        return self._json(report)
+        # pre-serialised and cached on the Case; just hand over the bytes
+        return self._send(200, case.analysis_payload(), "application/json")
 
     def _event(self, case_id, event_id):
         case = self._case(case_id)
@@ -349,6 +342,7 @@ def prewarm_sample():
             case = Case(officer="UNSPECIFIED")
             case.add_directory(SAMPLE_DIR)
             case.analyze()
+            case.analysis_payload()   # warm the serialised payload too
             global _demo_case_id
             with _lock:
                 _cases[case.case_id] = case
@@ -362,20 +356,6 @@ def prewarm_sample():
             _prewarm_done.set()
 
     threading.Thread(target=build, daemon=True).start()
-
-
-def _compact(attrs):
-    """Trim bulky fields out of the per-event payload sent to the browser."""
-    out = {}
-    for k, v in (attrs or {}).items():
-        if k in ("flow",):
-            continue
-        if isinstance(v, str) and len(v) > 600:
-            v = v[:600] + "…"
-        if isinstance(v, list) and len(v) > 40:
-            v = v[:40] + ["…"]
-        out[k] = v
-    return out
 
 
 def serve(host="127.0.0.1", port=8713, open_browser=True, demo=True):
